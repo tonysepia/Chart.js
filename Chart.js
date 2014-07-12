@@ -3200,6 +3200,42 @@
 			);
 
 		},
+		addRadarData : function(valuesArray,labelsArray,label){
+		
+			var colorR = Math.floor(Math.random() * 256);
+			var colorG = Math.floor(Math.random() * 256);
+			var colorB = Math.floor(Math.random() * 256);
+			var datasetObject = {
+				label: label,
+				fillColor : "rgba("+colorR+","+colorG+","+colorB+",0.2)",
+				strokeColor : "rgba("+colorR+","+colorG+","+colorB+",1)",
+				pointColor : "rgba("+colorR+","+colorG+","+colorB+",1)",
+				pointStrokeColor : "rgba("+colorR+","+colorG+","+colorB+",1)",
+				points : []
+			};
+
+			this.datasets.push(datasetObject);
+			var dIndex = this.datasets.length-1;
+			//Map the values array for each of the datasets
+			//this.scale.valuesCount++;
+			for (var v in valuesArray) {
+				if (helpers.isNumber(valuesArray[v])){
+					var pointPosition = this.scale.getPointPosition(this.scale.valuesCount, this.scale.calculateCenterOffset(valuesArray[v]));
+					this.datasets[dIndex].points.push(new this.PointClass({
+						value : valuesArray[v],
+						label : labelsArray[v],
+						x: pointPosition.x,
+						y: pointPosition.y,
+						strokeColor : this.datasets[dIndex].pointStrokeColor,
+						fillColor : this.datasets[dIndex].pointColor
+					}));
+				}
+			}
+			
+			
+			this.reflow();
+			this.update();
+		},
 		addData : function(valuesArray,label){
 			//Map the values array for each of the datasets
 			this.scale.valuesCount++;
